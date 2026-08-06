@@ -9,39 +9,38 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "emprestimo")
+@Table(name = "emprestimos")
 @NoArgsConstructor
 @Getter
 @Setter
 public class Emprestimo {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "livro_id", nullable = false)
     private Livro livro;
 
-    @Column(name = "nome_leitor", nullable = false )
-    private String nomeLeitor;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
-
-    @Column(name = "data_emprestismo", nullable = false)
+    @Column(name = "data_emprestimo", nullable = false)
     private LocalDate dataEmprestimo;
 
-    @Column(name = "data_devolucao", nullable = false)
+    @Column(name = "data_devolucao")
     private LocalDate dataDevolucao;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status_emprestimo", nullable = false)
     private StatusEmprestimo statusEmprestimo;
 
-    public Emprestimo(Livro livro, String nomeLeitor, LocalDate dataEmprestimo, LocalDate dataDevolucao, StatusEmprestimo statusEmprestimo) {
+    public Emprestimo(Livro livro, Usuario usuario, LocalDate dataEmprestimo, StatusEmprestimo statusEmprestimo) {
         this.livro = livro;
-        this.nomeLeitor = nomeLeitor;
+        this.usuario = usuario;
         this.dataEmprestimo = dataEmprestimo;
-        this.dataDevolucao = dataDevolucao;
         this.statusEmprestimo = statusEmprestimo;
     }
 }

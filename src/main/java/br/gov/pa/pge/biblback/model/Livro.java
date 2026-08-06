@@ -1,6 +1,8 @@
 package br.gov.pa.pge.biblback.model;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,19 +26,16 @@ public class Livro {
     @Column(nullable = false)
     private String autor;
 
-
     @NotBlank
     @Column(nullable = false)
     private String isbn;
 
-
-    @NotBlank
-    @Column(nullable = false)
+    @NotNull
+    @Column(name = "ano_lancamento", nullable = false)
     private Integer anoLancamento;
 
     @Column(nullable = false)
     private Boolean disponivel = true;
-
 
     public Livro(String titulo, String autor, String isbn, Integer anoLancamento) {
         this.titulo = titulo;
