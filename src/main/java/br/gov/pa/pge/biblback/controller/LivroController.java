@@ -18,7 +18,7 @@ public class LivroController {
     private final LivroService LIVRO_SERVICE;
 
     @GetMapping
-    public List<LivroResponse> listar() {
+    public List<LivroResponse> listarTodos() {
         return LIVRO_SERVICE.listarTodos().stream().map(LivroResponse::from).toList();
     }
 
@@ -27,9 +27,19 @@ public class LivroController {
         return LivroResponse.from(LIVRO_SERVICE.buscarPorId(id));
     }
 
-    @GetMapping("/buscarPorTitulo")
-    public List<LivroResponse> buscarPorTitulo(String titulo) {
+    @GetMapping("{/titulo}")
+    public List<LivroResponse> buscarPorTitulo(@PathVariable String titulo) {
         return LIVRO_SERVICE.buscarPorTitulo(titulo).stream().map(LivroResponse::from).toList();
+    }
+
+    @GetMapping("{/autor}")
+    public List<LivroResponse> buscarPorAutor(String autor){
+        return LIVRO_SERVICE.buscarPorAutor(autor).stream().map(LivroResponse::from).toList();
+    }
+
+    @GetMapping("/{anoLancamento}")
+    public List<LivroResponse> buscarPorAnoLancamento(@PathVariable Integer anoLancamento){
+        return LIVRO_SERVICE.buscarPorAnoLancamento(anoLancamento).stream().map(LivroResponse::from).toList();
     }
 
     @PostMapping

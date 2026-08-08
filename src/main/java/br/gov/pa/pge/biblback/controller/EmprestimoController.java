@@ -2,6 +2,7 @@ package br.gov.pa.pge.biblback.controller;
 
 import br.gov.pa.pge.biblback.dto.EmprestimoRequest;
 import br.gov.pa.pge.biblback.dto.EmprestimoResponse;
+import br.gov.pa.pge.biblback.enums.StatusEmprestimo;
 import br.gov.pa.pge.biblback.service.EmprestimoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,11 @@ public class EmprestimoController {
     @GetMapping("/{id}")
     public EmprestimoResponse buscar(@PathVariable Long id) {
         return EmprestimoResponse.from(EMPRESTIMO_SERVICE.buscarPorId(id));
+    }
+
+    @GetMapping("/{status}")
+    public List<EmprestimoResponse> buscarPorStatus(@PathVariable StatusEmprestimo status){
+        return EMPRESTIMO_SERVICE.buscarPorStatus(status).stream().map(EmprestimoResponse::from).toList();
     }
 
     @PostMapping

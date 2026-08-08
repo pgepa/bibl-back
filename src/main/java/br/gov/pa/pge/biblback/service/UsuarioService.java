@@ -16,8 +16,8 @@ public class UsuarioService {
     private final UsuarioRepository USUARIO_REPOSITORY;
 
     @Transactional
-    public Usuario salvar(String nome, String email, String telefone) {
-        Usuario usuario = new Usuario(nome, email, telefone);
+    public Usuario salvar(String cpf, String nome, String email, String telefone) {
+        Usuario usuario = new Usuario(cpf, nome, email, telefone);
         return USUARIO_REPOSITORY.save(usuario);
     }
 
@@ -30,6 +30,12 @@ public class UsuarioService {
     public List<Usuario> buscarPorNome(String nome){
         return USUARIO_REPOSITORY.findByNomeContainingIgnoreCase(nome.trim());
     }
+
+    @Transactional(readOnly = true)
+    public Usuario buscarPorCpf(String cpf){
+        return USUARIO_REPOSITORY.findByCpf(cpf.trim()).orElseThrow(UsuarioNaoEncontradoException::new);
+    }
+
 
     @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {

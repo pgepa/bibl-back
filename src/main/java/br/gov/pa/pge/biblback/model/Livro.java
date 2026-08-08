@@ -19,22 +19,22 @@ public class Livro {
     private Long id;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "titulo", nullable = false)
     private String titulo;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "autor", nullable = false)
     private String autor;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "isbn",nullable = false, unique = true)
     private String isbn;
 
     @NotNull
-    @Column(name = "ano_lancamento", nullable = false)
+    @Column(name = "ano_lancamento", nullable = false, length = 4)
     private Integer anoLancamento;
 
-    @Column(nullable = false)
+    @Column(name = "disponivel", nullable = false)
     private Boolean disponivel = true;
 
     public Livro(String titulo, String autor, String isbn, Integer anoLancamento) {

@@ -2,7 +2,6 @@ package br.gov.pa.pge.biblback.controller;
 
 import br.gov.pa.pge.biblback.dto.UsuarioRequest;
 import br.gov.pa.pge.biblback.dto.UsuarioResponse;
-import br.gov.pa.pge.biblback.model.Usuario;
 import br.gov.pa.pge.biblback.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ public class UsuarioController {
     private final UsuarioService USUARIO_SERVICE;
 
     @GetMapping
-    public List<UsuarioResponse> listar() {
+    public List<UsuarioResponse> listarTodos() {
         return USUARIO_SERVICE.listarTodos().stream().map(UsuarioResponse::from).toList();
     }
 
@@ -28,15 +27,21 @@ public class UsuarioController {
         return UsuarioResponse.from(USUARIO_SERVICE.buscarPorId(id));
     }
 
-    @GetMapping("/buscarPorNome")
+    @GetMapping("/{nome}")
     public List<UsuarioResponse> buscarPorNome(@RequestParam String nome){
         return USUARIO_SERVICE.buscarPorNome(nome).stream().map(UsuarioResponse::from).toList();
+    }
+
+    @GetMapping("/{cpf}")
+    public UsuarioResponse buscarPorCpf(@PathVariable String cpf){
+        return UsuarioResponse.from(USUARIO_SERVICE.buscarPorCpf(cpf));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse cadastrar(@Valid @RequestBody UsuarioRequest request) {
         return UsuarioResponse.from(USUARIO_SERVICE.salvar(
+                request.cpf(),
                 request.nome(),
                 request.email(),
                 request.telefone()

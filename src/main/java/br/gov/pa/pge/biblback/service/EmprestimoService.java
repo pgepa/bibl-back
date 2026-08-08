@@ -25,10 +25,10 @@ public class EmprestimoService {
 
     @Transactional
     public Emprestimo realizarEmprestimo(Long livroId, Long usuarioId, LocalDate dataPrevistaDevolucao) {
+
         Livro livro = LIVRO_SERVICE.buscarPorId(livroId);
         Usuario usuario = USUARIO_SERVICE.buscarPorId(usuarioId);
         LocalDate localDateNow = LocalDate.now();
-
 
         if(dataPrevistaDevolucao.isBefore(localDateNow)){
             throw new RuntimeException("A data de devolução não pode ser anterior à data do empréstimo.");
@@ -70,6 +70,11 @@ public class EmprestimoService {
     @Transactional(readOnly = true)
     public Emprestimo buscarPorId(Long id) {
         return EMPRESTIMO_REPOSITORY.findById(id).orElseThrow(EmprestimoNaoEncontradoException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Emprestimo> buscarPorStatus(StatusEmprestimo statusEmprestimo){
+        return EMPRESTIMO_REPOSITORY.findByStatus(statusEmprestimo);
     }
 
     @Transactional(readOnly = true)

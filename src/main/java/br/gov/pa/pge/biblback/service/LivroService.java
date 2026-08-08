@@ -27,8 +27,18 @@ public class LivroService {
     }
 
     @Transactional(readOnly = true)
-    public List<Livro> buscarPorTitulo(String titulo){
+    public List<Livro> buscarPorTitulo(String titulo) {
         return LIVRO_REPOSITORY.findByTituloContainingIgnoreCase(titulo.trim());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Livro> buscarPorAutor(String autor) {
+        return LIVRO_REPOSITORY.findByAutorContainingIgnoreCase(autor.trim());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Livro> buscarPorAnoLancamento(Integer anoLancamento){
+        return LIVRO_REPOSITORY.findByAnoLancamento(anoLancamento);
     }
 
     @Transactional(readOnly = true)
