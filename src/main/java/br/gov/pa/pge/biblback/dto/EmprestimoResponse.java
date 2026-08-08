@@ -10,6 +10,7 @@ public record EmprestimoResponse(
         LivroResponse livro,
         UsuarioResponse usuario,
         LocalDate dataEmprestimo,
+        LocalDate dataPrevistaDevolucao,
         LocalDate dataDevolucao,
         StatusEmprestimo statusEmprestimo
 ) {
@@ -19,6 +20,7 @@ public record EmprestimoResponse(
                 LivroResponse.from(emprestimo.getLivro()),
                 UsuarioResponse.from(emprestimo.getUsuario()),
                 emprestimo.getDataEmprestimo(),
+                emprestimo.getDataPrevistaDevolucao(),
                 emprestimo.getDataDevolucao(),
                 emprestimo.getStatusEmprestimo()
         );

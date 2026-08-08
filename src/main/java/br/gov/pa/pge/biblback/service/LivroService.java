@@ -13,22 +13,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LivroService {
 
-    private final LivroRepository livroRepository;
+    private final LivroRepository LIVRO_REPOSITORY;
 
     @Transactional
     public Livro cadastrar(String titulo, String autor, String isbn, Integer anoLancamento) {
         Livro livro = new Livro(titulo, autor, isbn, anoLancamento);
-        return livroRepository.save(livro);
+        return LIVRO_REPOSITORY.save(livro);
     }
 
     @Transactional(readOnly = true)
     public Livro buscarPorId(Long id) {
-        return livroRepository.findById(id).orElseThrow(LivroNaoEncontradoException::new);
+        return LIVRO_REPOSITORY.findById(id).orElseThrow(LivroNaoEncontradoException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Livro> buscarPorTitulo(String titulo){
+        return LIVRO_REPOSITORY.findByTituloContainingIgnoreCase(titulo.trim());
     }
 
     @Transactional(readOnly = true)
     public List<Livro> listarTodos() {
-        return livroRepository.findAll();
+        return LIVRO_REPOSITORY.findAll();
     }
 
     @Transactional
@@ -38,12 +43,12 @@ public class LivroService {
         livro.setAutor(autor);
         livro.setIsbn(isbn);
         livro.setAnoLancamento(anoLancamento);
-        return livroRepository.save(livro);
+        return LIVRO_REPOSITORY.save(livro);
     }
 
     @Transactional
     public void deletar(Long id) {
         Livro livro = buscarPorId(id);
-        livroRepository.delete(livro);
+        LIVRO_REPOSITORY.delete(livro);
     }
 }

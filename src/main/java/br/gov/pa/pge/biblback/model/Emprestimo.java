@@ -30,6 +30,9 @@ public class Emprestimo {
     @Column(name = "data_emprestimo", nullable = false)
     private LocalDate dataEmprestimo;
 
+    @Column(name = "data_prevista_devolucao", nullable = false)
+    private LocalDate dataPrevistaDevolucao;
+
     @Column(name = "data_devolucao")
     private LocalDate dataDevolucao;
 
@@ -37,10 +40,11 @@ public class Emprestimo {
     @Column(name = "status_emprestimo", nullable = false)
     private StatusEmprestimo statusEmprestimo;
 
-    public Emprestimo(Livro livro, Usuario usuario, LocalDate dataEmprestimo, StatusEmprestimo statusEmprestimo) {
+    public Emprestimo(Livro livro, Usuario usuario, LocalDate dataEmprestimo,LocalDate dataPrevistaDevolucao, StatusEmprestimo statusEmprestimo) {
         this.livro = livro;
         this.usuario = usuario;
         this.dataEmprestimo = dataEmprestimo;
+        this.dataPrevistaDevolucao = dataPrevistaDevolucao;
         this.statusEmprestimo = statusEmprestimo;
     }
 }

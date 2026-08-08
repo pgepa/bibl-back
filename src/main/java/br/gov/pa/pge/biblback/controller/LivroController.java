@@ -15,22 +15,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LivroController {
 
-    private final LivroService livroService;
+    private final LivroService LIVRO_SERVICE;
 
     @GetMapping
     public List<LivroResponse> listar() {
-        return livroService.listarTodos().stream().map(LivroResponse::from).toList();
+        return LIVRO_SERVICE.listarTodos().stream().map(LivroResponse::from).toList();
     }
 
     @GetMapping("/{id}")
-    public LivroResponse buscar(@PathVariable Long id) {
-        return LivroResponse.from(livroService.buscarPorId(id));
+    public LivroResponse buscarPorId(@PathVariable Long id) {
+        return LivroResponse.from(LIVRO_SERVICE.buscarPorId(id));
+    }
+
+    @GetMapping("/buscarPorTitulo")
+    public List<LivroResponse> buscarPorTitulo(String titulo) {
+        return LIVRO_SERVICE.buscarPorTitulo(titulo).stream().map(LivroResponse::from).toList();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LivroResponse cadastrar(@Valid @RequestBody LivroRequest request) {
-        return LivroResponse.from(livroService.cadastrar(
+        return LivroResponse.from(LIVRO_SERVICE.cadastrar(
                 request.titulo(),
                 request.autor(),
                 request.isbn(),
@@ -40,7 +45,7 @@ public class LivroController {
 
     @PutMapping("/{id}")
     public LivroResponse atualizar(@PathVariable Long id, @Valid @RequestBody LivroRequest request) {
-        return LivroResponse.from(livroService.atualizar(
+        return LivroResponse.from(LIVRO_SERVICE.atualizar(
                 id,
                 request.titulo(),
                 request.autor(),
@@ -52,6 +57,6 @@ public class LivroController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
-        livroService.deletar(id);
+        LIVRO_SERVICE.deletar(id);
     }
 }

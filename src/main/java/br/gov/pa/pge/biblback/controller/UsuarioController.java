@@ -2,6 +2,7 @@ package br.gov.pa.pge.biblback.controller;
 
 import br.gov.pa.pge.biblback.dto.UsuarioRequest;
 import br.gov.pa.pge.biblback.dto.UsuarioResponse;
+import br.gov.pa.pge.biblback.model.Usuario;
 import br.gov.pa.pge.biblback.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,22 +16,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsuarioController {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioService USUARIO_SERVICE;
 
     @GetMapping
     public List<UsuarioResponse> listar() {
-        return usuarioService.listarTodos().stream().map(UsuarioResponse::from).toList();
+        return USUARIO_SERVICE.listarTodos().stream().map(UsuarioResponse::from).toList();
     }
 
     @GetMapping("/{id}")
-    public UsuarioResponse buscar(@PathVariable Long id) {
-        return UsuarioResponse.from(usuarioService.buscarPorId(id));
+    public UsuarioResponse buscarPorId(@PathVariable Long id) {
+        return UsuarioResponse.from(USUARIO_SERVICE.buscarPorId(id));
+    }
+
+    @GetMapping("/buscarPorNome")
+    public List<UsuarioResponse> buscarPorNome(@RequestParam String nome){
+        return USUARIO_SERVICE.buscarPorNome(nome).stream().map(UsuarioResponse::from).toList();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse cadastrar(@Valid @RequestBody UsuarioRequest request) {
-        return UsuarioResponse.from(usuarioService.salvar(
+        return UsuarioResponse.from(USUARIO_SERVICE.salvar(
                 request.nome(),
                 request.email(),
                 request.telefone()
@@ -39,7 +45,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public UsuarioResponse atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequest request) {
-        return UsuarioResponse.from(usuarioService.atualizar(
+        return UsuarioResponse.from(USUARIO_SERVICE.atualizar(
                 id,
                 request.nome(),
                 request.email(),
@@ -50,6 +56,6 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
-        usuarioService.deletar(id);
+        USUARIO_SERVICE.deletar(id);
     }
 }

@@ -13,22 +13,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioRepository USUARIO_REPOSITORY;
 
     @Transactional
     public Usuario salvar(String nome, String email, String telefone) {
         Usuario usuario = new Usuario(nome, email, telefone);
-        return usuarioRepository.save(usuario);
+        return USUARIO_REPOSITORY.save(usuario);
     }
 
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
-        return usuarioRepository.findById(id).orElseThrow(UsuarioNaoEncontradoException::new);
+        return USUARIO_REPOSITORY.findById(id).orElseThrow(UsuarioNaoEncontradoException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Usuario> buscarPorNome(String nome){
+        return USUARIO_REPOSITORY.findByNomeContainingIgnoreCase(nome.trim());
     }
 
     @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
+        return USUARIO_REPOSITORY.findAll();
     }
 
     @Transactional
@@ -37,12 +42,12 @@ public class UsuarioService {
         usuario.setNome(nome);
         usuario.setEmail(email);
         usuario.setTelefone(telefone);
-        return usuarioRepository.save(usuario);
+        return USUARIO_REPOSITORY.save(usuario);
     }
 
     @Transactional
     public void deletar(Long id) {
         Usuario usuario = buscarPorId(id);
-        usuarioRepository.delete(usuario);
+        USUARIO_REPOSITORY.delete(usuario);
     }
 }
