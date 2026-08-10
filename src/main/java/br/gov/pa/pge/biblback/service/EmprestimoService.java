@@ -74,7 +74,7 @@ public class EmprestimoService {
 
     @Transactional(readOnly = true)
     public List<Emprestimo> buscarPorStatus(StatusEmprestimo statusEmprestimo){
-        return EMPRESTIMO_REPOSITORY.findByStatus(statusEmprestimo);
+        return EMPRESTIMO_REPOSITORY.findByStatusEmprestimo(statusEmprestimo);
     }
 
     @Transactional(readOnly = true)

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
-    public List<Emprestimo> findByStatus(StatusEmprestimo statusEmprestimo);
+    public List<Emprestimo> findByStatusEmprestimo(StatusEmprestimo statusEmprestimo);
 }

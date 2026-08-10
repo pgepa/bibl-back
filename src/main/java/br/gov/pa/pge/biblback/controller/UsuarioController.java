@@ -27,12 +27,12 @@ public class UsuarioController {
         return UsuarioResponse.from(USUARIO_SERVICE.buscarPorId(id));
     }
 
-    @GetMapping("/{nome}")
-    public List<UsuarioResponse> buscarPorNome(@RequestParam String nome){
+    @GetMapping("/nome/{nome}")
+    public List<UsuarioResponse> buscarPorNome(@PathVariable String nome){
         return USUARIO_SERVICE.buscarPorNome(nome).stream().map(UsuarioResponse::from).toList();
     }
 
-    @GetMapping("/{cpf}")
+    @GetMapping("/cpf/{cpf}")
     public UsuarioResponse buscarPorCpf(@PathVariable String cpf){
         return UsuarioResponse.from(USUARIO_SERVICE.buscarPorCpf(cpf));
     }
@@ -58,7 +58,7 @@ public class UsuarioController {
         ));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/deletar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
         USUARIO_SERVICE.deletar(id);

@@ -34,7 +34,7 @@ public class Livro {
     @Column(name = "ano_lancamento", nullable = false, length = 4)
     private Integer anoLancamento;
 
-    @Column(name = "disponivel", nullable = false)
+    @Column(name = "is_disponivel", nullable = false)
     private Boolean disponivel = true;
 
     public Livro(String titulo, String autor, String isbn, Integer anoLancamento) {

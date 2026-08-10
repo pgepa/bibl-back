@@ -28,9 +28,9 @@ public class EmprestimoController {
         return EmprestimoResponse.from(EMPRESTIMO_SERVICE.buscarPorId(id));
     }
 
-    @GetMapping("/{status}")
-    public List<EmprestimoResponse> buscarPorStatus(@PathVariable StatusEmprestimo status){
-        return EMPRESTIMO_SERVICE.buscarPorStatus(status).stream().map(EmprestimoResponse::from).toList();
+    @GetMapping("/status/{statusEmprestimo}")
+    public List<EmprestimoResponse> buscarPorStatus(@PathVariable StatusEmprestimo statusEmprestimo){
+        return EMPRESTIMO_SERVICE.buscarPorStatus(statusEmprestimo).stream().map(EmprestimoResponse::from).toList();
     }
 
     @PostMapping

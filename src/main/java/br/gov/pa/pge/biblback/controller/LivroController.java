@@ -27,17 +27,17 @@ public class LivroController {
         return LivroResponse.from(LIVRO_SERVICE.buscarPorId(id));
     }
 
-    @GetMapping("{/titulo}")
+    @GetMapping("/titulo/{titulo}")
     public List<LivroResponse> buscarPorTitulo(@PathVariable String titulo) {
         return LIVRO_SERVICE.buscarPorTitulo(titulo).stream().map(LivroResponse::from).toList();
     }
 
-    @GetMapping("{/autor}")
-    public List<LivroResponse> buscarPorAutor(String autor){
+    @GetMapping("/autor/{autor}")
+    public List<LivroResponse> buscarPorAutor(@PathVariable String autor){
         return LIVRO_SERVICE.buscarPorAutor(autor).stream().map(LivroResponse::from).toList();
     }
 
-    @GetMapping("/{anoLancamento}")
+    @GetMapping("/ano/{anoLancamento}")
     public List<LivroResponse> buscarPorAnoLancamento(@PathVariable Integer anoLancamento){
         return LIVRO_SERVICE.buscarPorAnoLancamento(anoLancamento).stream().map(LivroResponse::from).toList();
     }
