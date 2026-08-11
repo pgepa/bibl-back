@@ -52,6 +52,7 @@ public class UsuarioController {
     public UsuarioResponse atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequest request) {
         return UsuarioResponse.from(USUARIO_SERVICE.atualizar(
                 id,
+                request.cpf(),
                 request.nome(),
                 request.email(),
                 request.telefone()

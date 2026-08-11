@@ -36,15 +36,15 @@ public class UsuarioService {
         return USUARIO_REPOSITORY.findByCpf(cpf.trim()).orElseThrow(UsuarioNaoEncontradoException::new);
     }
 
-
     @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
         return USUARIO_REPOSITORY.findAll();
     }
 
     @Transactional
-    public Usuario atualizar(Long id, String nome, String email, String telefone) {
+    public Usuario atualizar(Long id, String cpf, String nome, String email, String telefone) {
         Usuario usuario = buscarPorId(id);
+        usuario.setCpf(cpf);
         usuario.setNome(nome);
         usuario.setEmail(email);
         usuario.setTelefone(telefone);

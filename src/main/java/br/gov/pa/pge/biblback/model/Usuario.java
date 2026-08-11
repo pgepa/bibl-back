@@ -32,7 +32,7 @@ public class Usuario {
     private String email;
 
     @NotBlank
-    @Column(name = "telefone", nullable = false)
+    @Column(name = "telefone", nullable = false, length = 11, unique = true)
     private String telefone;
 
     public Usuario(String cpf,String nome, String email, String telefone) {
