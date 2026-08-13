@@ -1,6 +1,7 @@
 package br.gov.pa.pge.biblback.service;
 
 import br.gov.pa.pge.biblback.enums.StatusEmprestimo;
+import br.gov.pa.pge.biblback.exception.DataDevolucaoInvalidaException;
 import br.gov.pa.pge.biblback.exception.EmprestimoJaDevolvidoException;
 import br.gov.pa.pge.biblback.exception.EmprestimoNaoEncontradoException;
 import br.gov.pa.pge.biblback.exception.LivroIndisponivelException;
@@ -31,7 +32,7 @@ public class EmprestimoService {
         LocalDate localDateNow = LocalDate.now();
 
         if(dataPrevistaDevolucao.isBefore(localDateNow)){
-            throw new RuntimeException("A data de devolução não pode ser anterior à data do empréstimo.");
+           throw new DataDevolucaoInvalidaException();
         }
 
         if (Boolean.FALSE.equals(livro.getDisponivel())) {

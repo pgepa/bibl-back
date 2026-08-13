@@ -32,6 +32,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI());
     }
 
+    @ExceptionHandler(DataDevolucaoInvalidaException.class)
+    public ResponseEntity<ErroResponse> handleDataInvalida(DataDevolucaoInvalidaException ex, HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String mensagem = ex.getBindingResult().getFieldErrors().stream()
