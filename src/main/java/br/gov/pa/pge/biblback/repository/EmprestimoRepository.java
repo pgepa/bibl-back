@@ -9,4 +9,5 @@ import java.util.List;
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
     public List<Emprestimo> findByStatusEmprestimo(StatusEmprestimo statusEmprestimo);
     public byte countByUsuarioIdAndStatusEmprestimo(Long idUsuario, StatusEmprestimo statusEmprestimo);
+    public boolean existsByUsuarioIdAndLivroIdAndStatusEmprestimo(Long idUsuario, Long livroId, StatusEmprestimo statusEmprestimo);
 }

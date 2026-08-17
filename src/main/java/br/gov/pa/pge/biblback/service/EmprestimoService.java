@@ -27,11 +27,15 @@ public class EmprestimoService {
 
         Usuario usuario = USUARIO_SERVICE.buscarPorId(usuarioId);
         Livro livro = LIVRO_SERVICE.buscarPorId(livroId);
-        LocalDate localDateNow = LocalDate.now();
         byte quantidadeEmprestimo = EMPRESTIMO_REPOSITORY.countByUsuarioIdAndStatusEmprestimo(usuario.getId(), StatusEmprestimo.ATIVO);
+        boolean jaPossuiLivroEmprestado = EMPRESTIMO_REPOSITORY.existsByUsuarioIdAndLivroIdAndStatusEmprestimo(usuario.getId(), livro.getId(), StatusEmprestimo.ATIVO);
+        LocalDate localDateNow = LocalDate.now();
 
         if(quantidadeEmprestimo >= LIMITE_EMPRESTIMO_ATIVO){
             throw new LimiteEmprestimoAtingidoException();
+        }
+        if(jaPossuiLivroEmprestado){
+            throw new UsuarioJaPossuiLivroException();
         }
         if(dataPrevistaDevolucao.isBefore(localDateNow)){
            throw new DataDevolucaoInvalidaException();
