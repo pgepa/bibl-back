@@ -1,5 +1,6 @@
 package br.gov.pa.pge.biblback.dto;
 
+import br.gov.pa.pge.biblback.enums.StatusUsuario;
 import br.gov.pa.pge.biblback.model.Usuario;
 
 public record UsuarioResponse(
@@ -7,7 +8,8 @@ public record UsuarioResponse(
         String cpf,
         String nome,
         String email,
-        String telefone
+        String telefone,
+        StatusUsuario statusUsuario
 ) {
     public static UsuarioResponse from(Usuario usuario) {
         return new UsuarioResponse(
@@ -15,7 +17,8 @@ public record UsuarioResponse(
                 usuario.getCpf(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getTelefone()
+                usuario.getTelefone(),
+                usuario.getStatusUsuario()
         );
     }
 }

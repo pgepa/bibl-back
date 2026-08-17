@@ -1,5 +1,6 @@
 package br.gov.pa.pge.biblback.service;
 
+import br.gov.pa.pge.biblback.enums.StatusUsuario;
 import br.gov.pa.pge.biblback.exception.UsuarioNaoEncontradoException;
 import br.gov.pa.pge.biblback.model.Usuario;
 import br.gov.pa.pge.biblback.repository.UsuarioRepository;
@@ -17,7 +18,7 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(String cpf, String nome, String email, String telefone) {
-        Usuario usuario = new Usuario(cpf, nome, email, telefone);
+        Usuario usuario = new Usuario(cpf, nome, email, telefone, StatusUsuario.ATIVO);
         return USUARIO_REPOSITORY.save(usuario);
     }
 
