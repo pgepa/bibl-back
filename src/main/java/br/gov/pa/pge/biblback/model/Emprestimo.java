@@ -1,5 +1,6 @@
 package br.gov.pa.pge.biblback.model;
 
+import br.gov.pa.pge.biblback.converter.StatusEmprestimoConverter;
 import br.gov.pa.pge.biblback.enums.StatusEmprestimo;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class Emprestimo {
     @Column(name = "data_devolucao")
     private LocalDate dataDevolucao;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = StatusEmprestimoConverter.class)
     @Column(name = "status_emprestimo", nullable = false)
     private StatusEmprestimo statusEmprestimo;
 
