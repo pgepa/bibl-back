@@ -1,10 +1,7 @@
 package br.gov.pa.pge.biblback.service;
 
 import br.gov.pa.pge.biblback.enums.StatusEmprestimo;
-import br.gov.pa.pge.biblback.exception.DataDevolucaoInvalidaException;
-import br.gov.pa.pge.biblback.exception.EmprestimoJaDevolvidoException;
-import br.gov.pa.pge.biblback.exception.EmprestimoNaoEncontradoException;
-import br.gov.pa.pge.biblback.exception.LivroIndisponivelException;
+import br.gov.pa.pge.biblback.exception.*;
 import br.gov.pa.pge.biblback.model.Emprestimo;
 import br.gov.pa.pge.biblback.model.Livro;
 import br.gov.pa.pge.biblback.model.Usuario;
@@ -23,18 +20,22 @@ public class EmprestimoService {
     private final EmprestimoRepository EMPRESTIMO_REPOSITORY;
     private final LivroService LIVRO_SERVICE;
     private final UsuarioService USUARIO_SERVICE;
+    private static final byte LIMITE_EMPRESTIMO_ATIVO = 3;
 
     @Transactional
     public Emprestimo realizarEmprestimo(Long livroId, Long usuarioId, LocalDate dataPrevistaDevolucao) {
 
-        Livro livro = LIVRO_SERVICE.buscarPorId(livroId);
         Usuario usuario = USUARIO_SERVICE.buscarPorId(usuarioId);
+        Livro livro = LIVRO_SERVICE.buscarPorId(livroId);
         LocalDate localDateNow = LocalDate.now();
+        byte quantidadeEmprestimo = EMPRESTIMO_REPOSITORY.countByUsuarioIdAndStatusEmprestimo(usuario.getId(), StatusEmprestimo.ATIVO);
 
+        if(quantidadeEmprestimo >= LIMITE_EMPRESTIMO_ATIVO){
+            throw new LimiteEmprestimoAtingidoException();
+        }
         if(dataPrevistaDevolucao.isBefore(localDateNow)){
            throw new DataDevolucaoInvalidaException();
         }
-
         if (Boolean.FALSE.equals(livro.getDisponivel())) {
             throw new LivroIndisponivelException();
         }
@@ -83,3 +84,4 @@ public class EmprestimoService {
         return EMPRESTIMO_REPOSITORY.findAll();
     }
 }
+
