@@ -2,7 +2,8 @@ package br.gov.pa.pge.biblback.enums;
 
 public enum StatusEmprestimo {
     ATIVO  (1),
-    CONCLUIDO(2);
+    CONCLUIDO(2),
+    ATRASADO(3);
 
 
     private Integer valor;

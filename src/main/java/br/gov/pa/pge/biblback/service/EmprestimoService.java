@@ -7,6 +7,7 @@ import br.gov.pa.pge.biblback.model.Livro;
 import br.gov.pa.pge.biblback.model.Usuario;
 import br.gov.pa.pge.biblback.repository.EmprestimoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +87,19 @@ public class EmprestimoService {
     @Transactional(readOnly = true)
     public List<Emprestimo> listarTodos() {
         return EMPRESTIMO_REPOSITORY.findAll();
+    }
+
+    @Scheduled(fixedRate =  60000)
+    public void verificarEmprestimosAtrasados(){
+
+        List<Emprestimo> emprestimosAtrasados = EMPRESTIMO_REPOSITORY
+                .findByStatusEmprestimoAndDataPrevistaDevolucaoBefore(StatusEmprestimo.ATIVO, LocalDate.now());
+
+         for(Emprestimo emprestimo : emprestimosAtrasados){
+             emprestimo.setStatusEmprestimo(StatusEmprestimo.ATRASADO);
+         }
+
+         EMPRESTIMO_REPOSITORY.saveAll(emprestimosAtrasados);
     }
 }
 
