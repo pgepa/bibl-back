@@ -22,6 +22,8 @@ public class EmprestimoService {
     private final LivroService LIVRO_SERVICE;
     private final UsuarioService USUARIO_SERVICE;
     private static final byte LIMITE_EMPRESTIMO_ATIVO = 3;
+    private final int LIMITE_RENOVACAO_EMPRESTIMO = 1;
+
 
     @Transactional
     public Emprestimo realizarEmprestimo(Long livroId, Long usuarioId, LocalDate dataPrevistaDevolucao) {
@@ -100,6 +102,24 @@ public class EmprestimoService {
          }
 
          EMPRESTIMO_REPOSITORY.saveAll(emprestimosAtrasados);
+    }
+
+    @Transactional
+    public Emprestimo renovarEmprestimo(Long id){
+
+        Emprestimo emprestimo = buscarPorId(id);
+
+        if(emprestimo.getStatusEmprestimo() != StatusEmprestimo.ATIVO){
+            throw new EmprestimoNaoAtivoException();
+        }
+
+        if(emprestimo.getQuantidadeRenovacaoEmprestimo() >= LIMITE_RENOVACAO_EMPRESTIMO){
+            throw new LimiteRenovocaoEmprestimoAtingidoException();
+        }
+
+        emprestimo.getDataPrevistaDevolucao().plusDays(7);
+        emprestimo.setQuantidadeRenovacaoEmprestimo(1);
+        return EMPRESTIMO_REPOSITORY.save(emprestimo);
     }
 }
 

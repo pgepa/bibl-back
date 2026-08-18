@@ -12,7 +12,8 @@ public record EmprestimoResponse(
         LocalDate dataEmprestimo,
         LocalDate dataPrevistaDevolucao,
         LocalDate dataDevolucao,
-        StatusEmprestimo statusEmprestimo
+        StatusEmprestimo statusEmprestimo,
+        int quantidadeRenovacaoEmprestimo
 ) {
     public static EmprestimoResponse from(Emprestimo emprestimo) {
         return new EmprestimoResponse(
@@ -22,7 +23,8 @@ public record EmprestimoResponse(
                 emprestimo.getDataEmprestimo(),
                 emprestimo.getDataPrevistaDevolucao(),
                 emprestimo.getDataDevolucao(),
-                emprestimo.getStatusEmprestimo()
+                emprestimo.getStatusEmprestimo(),
+                emprestimo.getQuantidadeRenovacaoEmprestimo()
         );
     }
 }

@@ -29,7 +29,7 @@ public class EmprestimoController {
     }
 
     @GetMapping("/status/{statusEmprestimo}")
-    public List<EmprestimoResponse> buscarPorStatus(@PathVariable StatusEmprestimo statusEmprestimo){
+    public List<EmprestimoResponse> buscarPorStatus(@PathVariable StatusEmprestimo statusEmprestimo) {
         return EMPRESTIMO_SERVICE.buscarPorStatus(statusEmprestimo).stream().map(EmprestimoResponse::from).toList();
     }
 
@@ -41,8 +41,13 @@ public class EmprestimoController {
         );
     }
 
-    @PostMapping("/{id}/devolver")
+    @PatchMapping("/{id}/devolver")
     public EmprestimoResponse devolver(@PathVariable Long id) {
         return EmprestimoResponse.from(EMPRESTIMO_SERVICE.devolver(id));
+    }
+
+    @PatchMapping("/{id}/renovar")
+    public EmprestimoResponse renovarEmprestimo(@PathVariable Long id) {
+        return EmprestimoResponse.from(EMPRESTIMO_SERVICE.renovarEmprestimo(id));
     }
 }

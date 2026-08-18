@@ -41,6 +41,9 @@ public class Emprestimo {
     @Column(name = "status_emprestimo", nullable = false)
     private StatusEmprestimo statusEmprestimo;
 
+    @Column(name = "quantidade_renovacoes", nullable = false)
+    private int quantidadeRenovacaoEmprestimo = 0;
+
     public Emprestimo(Livro livro, Usuario usuario, LocalDate dataEmprestimo,LocalDate dataPrevistaDevolucao, StatusEmprestimo statusEmprestimo) {
         this.livro = livro;
         this.usuario = usuario;
