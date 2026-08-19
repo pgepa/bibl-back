@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record LivroRequest(
-        @NotBlank String titulo,
-        @NotBlank String autor,
-        @NotBlank String isbn,
-        @NotNull Integer anoLancamento
+        @NotBlank (message = "O título é obrigatório") String titulo,
+        @NotBlank(message = "O autor é obrigatório") String autor,
+        @NotBlank (message = "O ISBN é obrigatório") String isbn,
+        @NotNull (message = "O ano de lançamento é obrigatório") Integer anoLancamento
 ) {
 }

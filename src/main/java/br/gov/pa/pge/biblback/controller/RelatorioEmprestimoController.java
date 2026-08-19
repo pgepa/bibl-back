@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/relatorios")
+@RequestMapping("/api/relatorios")
 @RequiredArgsConstructor
 public class RelatorioEmprestimoController {
     private final RelatorioEmprestimoService RELATORIO_EMPRESTIMO_SERVICE;
@@ -19,7 +19,4 @@ public class RelatorioEmprestimoController {
     public RelatorioEmprestimoResponse gerarRelatorio(){
         return RELATORIO_EMPRESTIMO_SERVICE.gerarRelatorioEmprestimo();
     }
-
-
-
 }

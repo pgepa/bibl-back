@@ -20,42 +20,103 @@ public class GlobalExceptionHandler {
             UsuarioNaoEncontradoException.class,
             EmprestimoNaoEncontradoException.class
     })
-    public ResponseEntity<ErroResponse> handleNotFound(RuntimeException ex, HttpServletRequest request) {
-        return build(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
+    public ResponseEntity<ErroResponse> handleNotFound(
+            RuntimeException ex,
+            HttpServletRequest request) {
+
+        return build(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler({
+            CodigoInvalidoException.class,
+            DataDevolucaoInvalidaException.class,
+            DataReservaInvalidaException.class
+    })
+    public ResponseEntity<ErroResponse> handleBadRequest(
+            RuntimeException ex,
+            HttpServletRequest request) {
+
+        return build(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErroResponse> handleValidation(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
+
+        String mensagem = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error ->
+                        error.getField() + ": " + error.getDefaultMessage()
+                )
+                .collect(Collectors.joining("; "));
+
+        return build(
+                HttpStatus.BAD_REQUEST,
+                mensagem,
+                request.getRequestURI()
+        );
     }
 
     @ExceptionHandler({
             LivroIndisponivelException.class,
-            EmprestimoJaDevolvidoException.class
+            EmprestimoJaDevolvidoException.class,
+            EmprestimoNaoAtivoException.class,
+            JaPossuiReservaException.class,
+            LimiteEmprestimoAtingidoException.class,
+            LimiteRenovocaoEmprestimoAtingidoException.class,
+            UsuarioJaPossuiLivroException.class,
+            UsuarioNaoAtivoException.class
     })
-    public ResponseEntity<ErroResponse> handleConflict(RuntimeException ex, HttpServletRequest request) {
-        return build(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI());
-    }
+    public ResponseEntity<ErroResponse> handleConflict(
+            RuntimeException ex,
+            HttpServletRequest request) {
 
-    @ExceptionHandler(DataDevolucaoInvalidaException.class)
-    public ResponseEntity<ErroResponse> handleDataInvalida(DataDevolucaoInvalidaException ex, HttpServletRequest request) {
-        return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErroResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        String mensagem = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining("; "));
-        return build(HttpStatus.BAD_REQUEST, mensagem, request.getRequestURI());
+        return build(
+                HttpStatus.CONFLICT,
+                ex.getMessage(),
+                request.getRequestURI()
+        );
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErroResponse> handleDataIntegrity(DataIntegrityViolationException ex, HttpServletRequest request) {
-        return build(HttpStatus.CONFLICT, "Violação de integridade dos dados", request.getRequestURI());
+    public ResponseEntity<ErroResponse> handleDataIntegrity(
+            DataIntegrityViolationException ex,
+            HttpServletRequest request) {
+
+        return build(
+                HttpStatus.CONFLICT,
+                "Violação de integridade dos dados",
+                request.getRequestURI()
+        );
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErroResponse> handleGeneric(Exception ex, HttpServletRequest request) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno no servidor", request.getRequestURI());
+    public ResponseEntity<ErroResponse> handleGeneric(
+            Exception ex,
+            HttpServletRequest request) {
+
+        return build(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Erro interno no servidor",
+                request.getRequestURI()
+        );
     }
 
-    private ResponseEntity<ErroResponse> build(HttpStatus status, String mensagem, String caminho) {
+    private ResponseEntity<ErroResponse> build(
+            HttpStatus status,
+            String mensagem,
+            String caminho) {
+
         ErroResponse body = new ErroResponse(
                 Instant.now(),
                 status.value(),
@@ -63,6 +124,9 @@ public class GlobalExceptionHandler {
                 mensagem,
                 caminho
         );
-        return ResponseEntity.status(status).body(body);
+
+        return ResponseEntity
+                .status(status)
+                .body(body);
     }
 }

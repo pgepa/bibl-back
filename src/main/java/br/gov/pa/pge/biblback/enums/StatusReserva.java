@@ -3,14 +3,15 @@ package br.gov.pa.pge.biblback.enums;
 import lombok.Getter;
 
 @Getter
-public enum StatusUsuario {
-    ATIVO(1),
-    INATIVO(0);
+public enum StatusReserva {
+    AGUARDANDO(1),
+    CONCLUIDA(2),
+    CANCELADO(3);
+
 
     private final Integer CODIGO;
 
-    StatusUsuario(Integer codigo){
+    StatusReserva(Integer codigo){
         this.CODIGO = codigo;
     }
-
 }

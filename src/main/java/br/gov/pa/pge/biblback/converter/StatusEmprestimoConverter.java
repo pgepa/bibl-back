@@ -21,5 +21,4 @@ public class StatusEmprestimoConverter implements AttributeConverter<StatusEmpre
                 .filter(s -> s.getValor().equals(codigo))
                 .findFirst().orElseThrow(CodigoInvalidoException::new);
     }
-
 }

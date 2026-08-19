@@ -1,5 +1,9 @@
 package br.gov.pa.pge.biblback.enums;
 
+
+import lombok.Getter;
+
+@Getter
 public enum StatusEmprestimo {
     ATIVO  (1),
     CONCLUIDO(2),
@@ -11,7 +15,5 @@ public enum StatusEmprestimo {
         this.valor = valor;
     }
 
-    public Integer getValor(){
-        return valor;
-    }
+
 }
