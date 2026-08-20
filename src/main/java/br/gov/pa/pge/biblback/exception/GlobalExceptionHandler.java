@@ -75,7 +75,8 @@ public class GlobalExceptionHandler {
             LimiteEmprestimoAtingidoException.class,
             LimiteRenovocaoEmprestimoAtingidoException.class,
             UsuarioJaPossuiLivroException.class,
-            UsuarioNaoAtivoException.class
+            UsuarioNaoAtivoException.class,
+            UsuarioJaAtivoException.class
     })
     public ResponseEntity<ErroResponse> handleConflict(
             RuntimeException ex,

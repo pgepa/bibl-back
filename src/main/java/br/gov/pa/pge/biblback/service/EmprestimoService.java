@@ -117,7 +117,7 @@ public class EmprestimoService {
             throw new LimiteRenovocaoEmprestimoAtingidoException();
         }
 
-        emprestimo.getDataPrevistaDevolucao().plusDays(7);
+        emprestimo.setDataPrevistaDevolucao(emprestimo.getDataPrevistaDevolucao().plusDays(7));
         emprestimo.setQuantidadeRenovacaoEmprestimo(1);
         return EMPRESTIMO_REPOSITORY.save(emprestimo);
     }

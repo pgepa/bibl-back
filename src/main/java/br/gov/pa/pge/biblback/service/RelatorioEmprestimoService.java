@@ -24,7 +24,10 @@ public class RelatorioEmprestimoService {
         long emprestimosAtrasados = EMPRESTIMO_REPOSITORY
                 .findByStatusEmprestimo(StatusEmprestimo.ATRASADO).size();
 
-
-        return new RelatorioEmprestimoResponse(totalEmprestimo, emprestimosAtivos, emprestimosConcluidos, emprestimosAtrasados);
+        return new RelatorioEmprestimoResponse(
+                totalEmprestimo,
+                emprestimosAtivos,
+                emprestimosConcluidos,
+                emprestimosAtrasados);
     }
 }

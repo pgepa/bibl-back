@@ -59,9 +59,13 @@ public class UsuarioController {
         ));
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletar(@PathVariable Long id) {
-        USUARIO_SERVICE.deletar(id);
+    @PatchMapping("desativar/{id}")
+    public UsuarioResponse desativar(@PathVariable Long id) {
+        return UsuarioResponse.from(USUARIO_SERVICE.desativar(id));
+    }
+
+    @PatchMapping("/ativar/{id}")
+    public UsuarioResponse ativar(@PathVariable Long id){
+        return UsuarioResponse.from(USUARIO_SERVICE.ativar(id));
     }
 }

@@ -1,6 +1,8 @@
 package br.gov.pa.pge.biblback.service;
 
 import br.gov.pa.pge.biblback.enums.StatusUsuario;
+import br.gov.pa.pge.biblback.exception.UsuarioJaAtivoException;
+import br.gov.pa.pge.biblback.exception.UsuarioNaoAtivoException;
 import br.gov.pa.pge.biblback.exception.UsuarioNaoEncontradoException;
 import br.gov.pa.pge.biblback.model.Usuario;
 import br.gov.pa.pge.biblback.repository.UsuarioRepository;
@@ -53,8 +55,22 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void deletar(Long id) {
+    public Usuario desativar(Long id) {
         Usuario usuario = buscarPorId(id);
-        USUARIO_REPOSITORY.delete(usuario);
+        if (usuario.getStatusUsuario() == StatusUsuario.INATIVO){
+            throw new UsuarioNaoAtivoException("Este usuário já está desativado.");
+        }
+        usuario.setStatusUsuario(StatusUsuario.INATIVO);
+        return USUARIO_REPOSITORY.save(usuario);
+    }
+
+    @Transactional
+    public Usuario ativar(Long id){
+        Usuario usuario = buscarPorId(id);
+        if (usuario.getStatusUsuario() == StatusUsuario.ATIVO){
+            throw new UsuarioJaAtivoException();
+        }
+        usuario.setStatusUsuario(StatusUsuario.ATIVO);
+        return USUARIO_REPOSITORY.save(usuario);
     }
 }
