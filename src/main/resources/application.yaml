@@ -6,8 +6,8 @@ spring:
     name: bibl-back
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/bibl}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,3 +16,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  api:
+    security:
+      token:
+        secret: ${JWT_SECRET:12345678}}
+
+
