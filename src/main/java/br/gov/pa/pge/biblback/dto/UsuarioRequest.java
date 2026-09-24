@@ -10,8 +10,9 @@ public record UsuarioRequest(
         @NotBlank String nome,
         @NotBlank @Email String email,
         @NotBlank String telefone,
-        @NotBlank TipoUsuario tipoUsuario,
-        @NotBlank String sennha
-
+        String matricula,
+        String setor,
+        TipoUsuario tipoUsuario,
+        String senha
 ) {
 }

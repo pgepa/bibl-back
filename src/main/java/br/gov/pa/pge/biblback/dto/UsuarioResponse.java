@@ -10,6 +10,8 @@ public record UsuarioResponse(
         String nome,
         String email,
         String telefone,
+        String matricula,
+        String setor,
         StatusUsuario statusUsuario,
         TipoUsuario tipoUsuario
 ) {
@@ -20,6 +22,8 @@ public record UsuarioResponse(
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getTelefone(),
+                usuario.getMatricula(),
+                usuario.getSetor(),
                 usuario.getStatusUsuario(),
                 usuario.getTipoUsuario()
         );

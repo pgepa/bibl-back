@@ -48,8 +48,8 @@ public class ReservaService {
                 .findById(reservaRequest.idLivro())
                 .orElseThrow(LivroNaoEncontradoException::new);
 
-        if (livro.getDisponivel()) {
-            throw new RuntimeException("Este livro está disponível para empréstimo.");
+        if (Boolean.TRUE.equals(livro.getDisponivel())) {
+            throw new IllegalArgumentException("Este livro já está disponível para empréstimo e não necessita de reserva.");
         }
 
         if (RESERVA_REPOSITORY.existsByUsuarioAndLivroAndStatusReserva(usuario, livro, StatusReserva.AGUARDANDO)) {

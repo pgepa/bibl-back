@@ -27,6 +27,11 @@ public class EmprestimoService {
 
     @Transactional
     public Emprestimo realizarEmprestimo(Long livroId, Long usuarioId, LocalDate dataPrevistaDevolucao) {
+        return realizarEmprestimo(livroId, usuarioId, dataPrevistaDevolucao, null, null);
+    }
+
+    @Transactional
+    public Emprestimo realizarEmprestimo(Long livroId, Long usuarioId, LocalDate dataPrevistaDevolucao, String idTransacao, String nomeFuncionario) {
 
         Usuario usuario = USUARIO_SERVICE.buscarPorId(usuarioId);
         Livro livro = LIVRO_SERVICE.buscarPorId(livroId);
@@ -56,8 +61,23 @@ public class EmprestimoService {
                 dataPrevistaDevolucao,
                 StatusEmprestimo.ATIVO
         );
+        emprestimo.setIdTransacao(idTransacao != null ? idTransacao : "TRX-" + System.currentTimeMillis());
+        emprestimo.setNomeFuncionario(nomeFuncionario != null && !nomeFuncionario.isBlank() ? nomeFuncionario : "Atendente ESAP");
 
         return EMPRESTIMO_REPOSITORY.save(emprestimo);
+    }
+
+    @Transactional
+    public List<Emprestimo> realizarEmprestimosLote(List<Long> livroIds, Long usuarioId, LocalDate dataPrevistaDevolucao, String nomeFuncionario) {
+        if (livroIds == null || livroIds.isEmpty()) {
+            throw new IllegalArgumentException("Informe ao menos um livro para o empréstimo.");
+        }
+        String idTransacao = "TRX-" + System.currentTimeMillis();
+        List<Emprestimo> emprestimos = new java.util.ArrayList<>();
+        for (Long livroId : livroIds) {
+            emprestimos.add(realizarEmprestimo(livroId, usuarioId, dataPrevistaDevolucao, idTransacao, nomeFuncionario));
+        }
+        return emprestimos;
     }
 
     @Transactional

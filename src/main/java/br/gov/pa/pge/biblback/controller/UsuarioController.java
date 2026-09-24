@@ -18,7 +18,10 @@ public class UsuarioController {
     private final UsuarioService USUARIO_SERVICE;
 
     @GetMapping
-    public List<UsuarioResponse> listarTodos() {
+    public List<UsuarioResponse> listarTodos(@RequestParam(required = false) String termo) {
+        if (termo != null && !termo.isBlank()) {
+            return USUARIO_SERVICE.buscarPorTermo(termo).stream().map(UsuarioResponse::from).toList();
+        }
         return USUARIO_SERVICE.listarTodos().stream().map(UsuarioResponse::from).toList();
     }
 
@@ -44,7 +47,11 @@ public class UsuarioController {
                 request.cpf(),
                 request.nome(),
                 request.email(),
-                request.telefone()
+                request.telefone(),
+                request.matricula(),
+                request.setor(),
+                request.tipoUsuario(),
+                request.senha()
         ));
     }
 
@@ -55,7 +62,11 @@ public class UsuarioController {
                 request.cpf(),
                 request.nome(),
                 request.email(),
-                request.telefone()
+                request.telefone(),
+                request.matricula(),
+                request.setor(),
+                request.tipoUsuario(),
+                request.senha()
         ));
     }
 

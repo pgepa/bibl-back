@@ -34,7 +34,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             CodigoInvalidoException.class,
             DataDevolucaoInvalidaException.class,
-            DataReservaInvalidaException.class
+            DataReservaInvalidaException.class,
+            IllegalArgumentException.class,
+            IllegalStateException.class
     })
     public ResponseEntity<ErroResponse> handleBadRequest(
             RuntimeException ex,

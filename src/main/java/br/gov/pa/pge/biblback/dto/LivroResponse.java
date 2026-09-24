@@ -8,7 +8,16 @@ public record LivroResponse(
         String autor,
         String isbn,
         Integer anoLancamento,
-        Boolean disponivel
+        Boolean disponivel,
+        String registro,
+        String classificacao,
+        String tipoDocumental,
+        String localPublicacao,
+        String editora,
+        Integer edicao,
+        String idioma,
+        Integer paginas,
+        String descritores
 ) {
     public static LivroResponse from(Livro livro) {
         return new LivroResponse(
@@ -17,7 +26,16 @@ public record LivroResponse(
                 livro.getAutor(),
                 livro.getIsbn(),
                 livro.getAnoLancamento(),
-                livro.getDisponivel()
+                livro.getDisponivel(),
+                livro.getRegistro(),
+                livro.getClassificacao(),
+                livro.getTipoDocumental(),
+                livro.getLocalPublicacao(),
+                livro.getEditora(),
+                livro.getEdicao(),
+                livro.getIdioma(),
+                livro.getPaginas(),
+                livro.getDescritores()
         );
     }
 }

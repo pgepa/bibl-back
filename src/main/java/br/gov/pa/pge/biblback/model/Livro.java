@@ -37,6 +37,33 @@ public class Livro {
     @Column(name = "is_disponivel", nullable = false)
     private Boolean disponivel = true;
 
+    @Column(name = "registro")
+    private String registro;
+
+    @Column(name = "classificacao")
+    private String classificacao;
+
+    @Column(name = "tipo_documental")
+    private String tipoDocumental;
+
+    @Column(name = "local_publicacao")
+    private String localPublicacao;
+
+    @Column(name = "editora")
+    private String editora;
+
+    @Column(name = "edicao")
+    private Integer edicao;
+
+    @Column(name = "idioma")
+    private String idioma;
+
+    @Column(name = "paginas")
+    private Integer paginas;
+
+    @Column(name = "descritores", columnDefinition = "TEXT")
+    private String descritores;
+
     public Livro(String titulo, String autor, String isbn, Integer anoLancamento) {
         this.titulo = titulo;
         this.autor = autor;

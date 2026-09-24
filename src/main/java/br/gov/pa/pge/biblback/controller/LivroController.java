@@ -18,7 +18,10 @@ public class LivroController {
     private final LivroService LIVRO_SERVICE;
 
     @GetMapping
-    public List<LivroResponse> listarTodos() {
+    public List<LivroResponse> listarTodos(@RequestParam(required = false) String termo) {
+        if (termo != null && !termo.isBlank()) {
+            return LIVRO_SERVICE.buscarPorTermo(termo).stream().map(LivroResponse::from).toList();
+        }
         return LIVRO_SERVICE.listarTodos().stream().map(LivroResponse::from).toList();
     }
 
@@ -49,7 +52,16 @@ public class LivroController {
                 request.titulo(),
                 request.autor(),
                 request.isbn(),
-                request.anoLancamento()
+                request.anoLancamento(),
+                request.registro(),
+                request.classificacao(),
+                request.tipoDocumental(),
+                request.localPublicacao(),
+                request.editora(),
+                request.edicao(),
+                request.idioma(),
+                request.paginas(),
+                request.descritores()
         ));
     }
 
@@ -60,7 +72,16 @@ public class LivroController {
                 request.titulo(),
                 request.autor(),
                 request.isbn(),
-                request.anoLancamento()
+                request.anoLancamento(),
+                request.registro(),
+                request.classificacao(),
+                request.tipoDocumental(),
+                request.localPublicacao(),
+                request.editora(),
+                request.edicao(),
+                request.idioma(),
+                request.paginas(),
+                request.descritores()
         ));
     }
 
