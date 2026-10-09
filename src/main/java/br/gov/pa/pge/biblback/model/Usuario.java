@@ -49,24 +49,35 @@ public class Usuario implements UserDetails {
 
     @Convert(converter = StatusUsuarioConverter.class)
     @Column(name = "status_usuario", nullable = false)
-    private StatusUsuario statusUsuario;
+    private StatusUsuario statusUsuario = StatusUsuario.ATIVO;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo_usuario", nullable = false)
     private TipoUsuario tipoUsuario;
 
-    public Usuario(String cpf,String nome, String email, String telefone, StatusUsuario statusUsuario, TipoUsuario tipoUsuario, String senha) {
+    public Usuario(String cpf,String nome, String email, String telefone, TipoUsuario tipoUsuario, String senha) {
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
-        this.statusUsuario = statusUsuario;
         this.tipoUsuario = tipoUsuario;
         this.senha = senha;
     }
 
+    public void ativar(){
+        this.statusUsuario = StatusUsuario.ATIVO;
+    }
+
+    public void desativar(){
+        this.statusUsuario = StatusUsuario.INATIVO;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USUARIO"));
+        if(this.tipoUsuario == TipoUsuario.ROLE_ADMIN){
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USUARIO"));
+        }
+        return List.of( new SimpleGrantedAuthority("ROLE_USUARIO"));
     }
 
     @Override
