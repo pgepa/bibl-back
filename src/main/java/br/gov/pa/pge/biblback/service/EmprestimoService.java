@@ -18,35 +18,38 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmprestimoService {
 
-    private final EmprestimoRepository EMPRESTIMO_REPOSITORY;
-    private final LivroService LIVRO_SERVICE;
-    private final UsuarioService USUARIO_SERVICE;
+    private final EmprestimoRepository emprestimoRepository;
+    private final LivroService livroService;
+    private final UsuarioService usuarioService;
     private static final byte LIMITE_EMPRESTIMO_ATIVO = 3;
-    private final int LIMITE_RENOVACAO_EMPRESTIMO = 1;
 
-
+    // valida regras de negocio e cria novo emprestimo
     @Transactional
     public Emprestimo realizarEmprestimo(Long livroId, Long usuarioId, LocalDate dataPrevistaDevolucao) {
-
-        Usuario usuario = USUARIO_SERVICE.buscarPorId(usuarioId);
-        Livro livro = LIVRO_SERVICE.buscarPorId(livroId);
-        byte quantidadeEmprestimo = EMPRESTIMO_REPOSITORY.countByUsuarioIdAndStatusEmprestimo(usuario.getId(), StatusEmprestimo.ATIVO);
-        boolean jaPossuiLivroEmprestado = EMPRESTIMO_REPOSITORY.existsByUsuarioIdAndLivroIdAndStatusEmprestimo(usuario.getId(), livro.getId(), StatusEmprestimo.ATIVO);
+        Usuario usuario = usuarioService.buscarEntidadePorId(usuarioId);
+        Livro livro = livroService.buscarPorId(livroId);
+        long quantidadeEmprestimo = emprestimoRepository.countByUsuarioIdAndStatusEmprestimo(usuario.getId(), StatusEmprestimo.ATIVO);
+        boolean jaPossuiLivroEmprestado = emprestimoRepository.existsByUsuarioIdAndLivroIdAndStatusEmprestimo(usuario.getId(), livro.getId(), StatusEmprestimo.ATIVO);
         LocalDate localDateNow = LocalDate.now();
 
-        if(quantidadeEmprestimo >= LIMITE_EMPRESTIMO_ATIVO){
+        // verifica se o usuario atingiu o limite maximo de emprestimos ativos
+        if (quantidadeEmprestimo >= LIMITE_EMPRESTIMO_ATIVO) {
             throw new LimiteEmprestimoAtingidoException();
         }
-        if(jaPossuiLivroEmprestado){
+        // impede emprestimo duplicado do mesmo livro para o usuario
+        if (jaPossuiLivroEmprestado) {
             throw new UsuarioJaPossuiLivroException();
         }
-        if(dataPrevistaDevolucao.isBefore(localDateNow)){
+        // garante que a data prevista de devolucao seja futura
+        if (dataPrevistaDevolucao.isBefore(localDateNow)) {
            throw new DataDevolucaoInvalidaException();
         }
+        // verifica se o livro esta disponivel no acervo
         if (Boolean.FALSE.equals(livro.getDisponivel())) {
             throw new LivroIndisponivelException();
         }
 
+        // marca o exemplar como indisponivel
         livro.setDisponivel(false);
 
         Emprestimo emprestimo = new Emprestimo(
@@ -57,69 +60,76 @@ public class EmprestimoService {
                 StatusEmprestimo.ATIVO
         );
 
-        return EMPRESTIMO_REPOSITORY.save(emprestimo);
+        return emprestimoRepository.save(emprestimo);
     }
 
+    // finaliza o emprestimo e libera o livro novamente no acervo
     @Transactional
     public Emprestimo devolver(Long emprestimoId) {
-
         Emprestimo emprestimo = buscarPorId(emprestimoId);
 
         if (emprestimo.getStatusEmprestimo() == StatusEmprestimo.CONCLUIDO) {
             throw new EmprestimoJaDevolvidoException();
         }
 
+        // atualiza status, registra data de entrega e torna livro disponivel
         emprestimo.setStatusEmprestimo(StatusEmprestimo.CONCLUIDO);
         emprestimo.setDataDevolucao(LocalDate.now());
         emprestimo.getLivro().setDisponivel(true);
 
-        return EMPRESTIMO_REPOSITORY.save(emprestimo);
+        return emprestimoRepository.save(emprestimo);
     }
 
     @Transactional(readOnly = true)
     public Emprestimo buscarPorId(Long id) {
-        return EMPRESTIMO_REPOSITORY.findById(id).orElseThrow(EmprestimoNaoEncontradoException::new);
+        return emprestimoRepository.findById(id).orElseThrow(EmprestimoNaoEncontradoException::new);
     }
 
     @Transactional(readOnly = true)
     public List<Emprestimo> buscarPorStatus(StatusEmprestimo statusEmprestimo){
-        return EMPRESTIMO_REPOSITORY.findByStatusEmprestimo(statusEmprestimo);
+        return emprestimoRepository.findByStatusEmprestimo(statusEmprestimo);
     }
 
     @Transactional(readOnly = true)
     public List<Emprestimo> listarTodos() {
-        return EMPRESTIMO_REPOSITORY.findAll();
+        return emprestimoRepository.findAll();
     }
 
-    @Scheduled(fixedRate =  60000)
-    public void verificarEmprestimosAtrasados(){
-
-        List<Emprestimo> emprestimosAtrasados = EMPRESTIMO_REPOSITORY
+    // rotina agendada para atualizar emprestimos vencidos para status atrasado
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void verificarEmprestimosAtrasados() {
+        // busca emprestimos ativos cuja data prevista de devolucao ja expirou
+        List<Emprestimo> emprestimosAtrasados = emprestimoRepository
                 .findByStatusEmprestimoAndDataPrevistaDevolucaoBefore(StatusEmprestimo.ATIVO, LocalDate.now());
 
-         for(Emprestimo emprestimo : emprestimosAtrasados){
-             emprestimo.setStatusEmprestimo(StatusEmprestimo.ATRASADO);
-         }
+        for (Emprestimo emprestimo : emprestimosAtrasados) {
+            emprestimo.setStatusEmprestimo(StatusEmprestimo.ATRASADO);
+        }
 
-         EMPRESTIMO_REPOSITORY.saveAll(emprestimosAtrasados);
+        emprestimoRepository.saveAll(emprestimosAtrasados);
     }
 
+    // estende o prazo de devolucao em 7 dias respeitando limite de renovacao
     @Transactional
-    public Emprestimo renovarEmprestimo(Long id){
-
+    public Emprestimo renovarEmprestimo(Long id) {
         Emprestimo emprestimo = buscarPorId(id);
 
-        if(emprestimo.getStatusEmprestimo() != StatusEmprestimo.ATIVO){
+        // apenas emprestimos ativos podem ser renovados
+        if (emprestimo.getStatusEmprestimo() != StatusEmprestimo.ATIVO) {
             throw new EmprestimoNaoAtivoException();
         }
 
-        if(emprestimo.getQuantidadeRenovacaoEmprestimo() >= LIMITE_RENOVACAO_EMPRESTIMO){
-            throw new LimiteRenovocaoEmprestimoAtingidoException();
+        // valida se ja atingiu o maximo de renovacoes permitidas
+        final byte LIMITE_RENOVACAO_EMPRESTIMO = 1;
+        if (emprestimo.getQuantidadeRenovacaoEmprestimo() >= LIMITE_RENOVACAO_EMPRESTIMO) {
+            throw new LimiteRenovacaoEmprestimoAtingidoException();
         }
 
+        // adiciona 7 dias a data prevista e incrementa contador
         emprestimo.setDataPrevistaDevolucao(emprestimo.getDataPrevistaDevolucao().plusDays(7));
         emprestimo.setQuantidadeRenovacaoEmprestimo(1);
-        return EMPRESTIMO_REPOSITORY.save(emprestimo);
+        return emprestimoRepository.save(emprestimo);
     }
 }
 
