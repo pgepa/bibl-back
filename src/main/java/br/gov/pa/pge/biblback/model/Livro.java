@@ -42,6 +42,5 @@ public class Livro {
         this.autor = autor;
         this.isbn = isbn;
         this.anoLancamento = anoLancamento;
-        this.disponivel = true;
     }
 }
