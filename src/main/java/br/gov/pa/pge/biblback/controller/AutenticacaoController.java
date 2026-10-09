@@ -10,28 +10,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AutenticacaoController {
 
-    private final AuthenticationManager MANAGER;
+    private final AuthenticationManager authenticationManager;
 
-    private final TokenService TOKEN_SERVICE;
+    private final TokenService tokenService;
 
-
-    public ResponseEntity<TokenResponse> efetuarLogin(@Valid @RequestBody AutenticacaoRequest authRequest){
-
+    // autentica credenciais e retorna token jwt
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody AutenticacaoRequest authRequest) {
+        // cria token de autenticacao com email e senha informados
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(authRequest.email(), authRequest.senha());
 
-        Authentication authentication =  MANAGER.authenticate(authenticationToken);
-        String JWT = TOKEN_SERVICE.gerarToken((Usuario) authentication.getPrincipal());
+        // valida credenciais atraves do authentication manager
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-        return ResponseEntity.ok(new TokenResponse(JWT));
+        // gera token jwt para o usuario autenticado
+        String jwt = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+
+        return ResponseEntity.ok(new TokenResponse(jwt));
     }
 }
 
