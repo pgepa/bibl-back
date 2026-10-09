@@ -1,11 +1,14 @@
 package br.gov.pa.pge.biblback.exception;
 
-import br.gov.pa.pge.biblback.dto.ErroResponse;
+import br.gov.pa.pge.biblback.dto.erro.ErroResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -66,14 +69,14 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
     }
-
     @ExceptionHandler({
             LivroIndisponivelException.class,
+            LivroDisponivelParaEmprestimoException.class,
             EmprestimoJaDevolvidoException.class,
             EmprestimoNaoAtivoException.class,
             JaPossuiReservaException.class,
             LimiteEmprestimoAtingidoException.class,
-            LimiteRenovocaoEmprestimoAtingidoException.class,
+            LimiteRenovacaoEmprestimoAtingidoException.class,
             UsuarioJaPossuiLivroException.class,
             UsuarioNaoAtivoException.class,
             UsuarioJaAtivoException.class
@@ -89,6 +92,43 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // captura credenciais incorretas e retorna 401 unauthorized
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErroResponse> handleBadCredentials(
+            BadCredentialsException ex,
+            HttpServletRequest request) {
+        return build(
+                HttpStatus.UNAUTHORIZED,
+                "Credenciais inválidas: e-mail ou senha incorretos.",
+                request.getRequestURI()
+        );
+    }
+
+    // captura falhas gerais de autenticacao e retorna 401 unauthorized
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErroResponse> handleAuthenticationException(
+            AuthenticationException ex,
+            HttpServletRequest request) {
+        return build(
+                HttpStatus.UNAUTHORIZED,
+                "Falha na autenticação: " + ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    // captura tentativas de acesso sem permissao e retorna 403 forbidden
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErroResponse> handleAccessDenied(
+            AccessDeniedException ex,
+            HttpServletRequest request) {
+        return build(
+                HttpStatus.FORBIDDEN,
+                "Acesso negado: você não tem permissão para acessar este recurso.",
+                request.getRequestURI()
+        );
+    }
+
+    // captura erros de chave unica ou integridade relacional do banco
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErroResponse> handleDataIntegrity(
             DataIntegrityViolationException ex,
@@ -101,6 +141,7 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // captura excecoes nao tratadas e retorna 500 internal server error
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroResponse> handleGeneric(
             Exception ex,
@@ -108,7 +149,7 @@ public class GlobalExceptionHandler {
 
         return build(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Erro interno no servidor",
+                "Erro interno no servidor: " + ex.getMessage(),
                 request.getRequestURI()
         );
     }
