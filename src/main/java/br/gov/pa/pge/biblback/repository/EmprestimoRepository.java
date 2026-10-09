@@ -8,8 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
-    public List<Emprestimo> findByStatusEmprestimo(StatusEmprestimo statusEmprestimo);
-    public byte countByUsuarioIdAndStatusEmprestimo(Long idUsuario, StatusEmprestimo statusEmprestimo);
-    public boolean existsByUsuarioIdAndLivroIdAndStatusEmprestimo(Long idUsuario, Long livroId, StatusEmprestimo statusEmprestimo);
-    public List<Emprestimo> findByStatusEmprestimoAndDataPrevistaDevolucaoBefore(StatusEmprestimo status, LocalDate data);
+    List<Emprestimo> findByStatusEmprestimo(StatusEmprestimo statusEmprestimo);
+    long countByStatusEmprestimo(StatusEmprestimo statusEmprestimo);
+    long countByUsuarioIdAndStatusEmprestimo(Long idUsuario, StatusEmprestimo statusEmprestimo);
+    boolean existsByUsuarioIdAndLivroIdAndStatusEmprestimo(Long idUsuario, Long livroId, StatusEmprestimo statusEmprestimo);
+    List<Emprestimo> findByStatusEmprestimoAndDataPrevistaDevolucaoBefore(StatusEmprestimo status, LocalDate data);
 }
