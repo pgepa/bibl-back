@@ -13,37 +13,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LivroService {
 
-    private final LivroRepository LIVRO_REPOSITORY;
+    private final LivroRepository livroRepository;
 
     @Transactional
     public Livro cadastrar(String titulo, String autor, String isbn, Integer anoLancamento) {
         Livro livro = new Livro(titulo, autor, isbn, anoLancamento);
-        return LIVRO_REPOSITORY.save(livro);
+        return livroRepository.save(livro);
     }
 
     @Transactional(readOnly = true)
     public Livro buscarPorId(Long id) {
-        return LIVRO_REPOSITORY.findById(id).orElseThrow(LivroNaoEncontradoException::new);
+        return livroRepository.findById(id).orElseThrow(LivroNaoEncontradoException::new);
     }
 
     @Transactional(readOnly = true)
     public List<Livro> buscarPorTitulo(String titulo) {
-        return LIVRO_REPOSITORY.findByTituloContainingIgnoreCase(titulo.trim());
+        return livroRepository.findByTituloContainingIgnoreCase(titulo.trim());
     }
 
     @Transactional(readOnly = true)
     public List<Livro> buscarPorAutor(String autor) {
-        return LIVRO_REPOSITORY.findByAutorContainingIgnoreCase(autor.trim());
+        return livroRepository.findByAutorContainingIgnoreCase(autor.trim());
     }
 
     @Transactional(readOnly = true)
     public List<Livro> buscarPorAnoLancamento(Integer anoLancamento){
-        return LIVRO_REPOSITORY.findByAnoLancamento(anoLancamento);
+        return livroRepository.findByAnoLancamento(anoLancamento);
     }
 
     @Transactional(readOnly = true)
     public List<Livro> listarTodos() {
-        return LIVRO_REPOSITORY.findAll();
+        return livroRepository.findAll();
     }
 
     @Transactional
@@ -53,12 +53,12 @@ public class LivroService {
         livro.setAutor(autor);
         livro.setIsbn(isbn);
         livro.setAnoLancamento(anoLancamento);
-        return LIVRO_REPOSITORY.save(livro);
+        return livroRepository.save(livro);
     }
 
     @Transactional
     public void deletar(Long id) {
         Livro livro = buscarPorId(id);
-        LIVRO_REPOSITORY.delete(livro);
+        livroRepository.delete(livro);
     }
 }
