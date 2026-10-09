@@ -20,24 +20,28 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "usuario_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "livro_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "livro_id", nullable = false)
     private Livro livro;
 
-    @Column(name = "data_emprestimo", nullable = false)
-    private LocalDate localDate;
+    @Column(name = "data_reserva", nullable = false)
+    private LocalDate dataReserva;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status_reserva", nullable = false)
-    private StatusReserva statusReserva;
+    private StatusReserva statusReserva = StatusReserva.AGUARDANDO;
 
-
-    public Reserva(Usuario usuario, Livro livro, LocalDate data){
+    public Reserva(Usuario usuario, Livro livro, LocalDate dataReserva) {
         this.usuario = usuario;
         this.livro = livro;
-        this.localDate = data;
+        this.dataReserva = dataReserva;
+    }
+
+    public LocalDate getLocalDate() {
+        return this.dataReserva;
     }
 }
