@@ -11,23 +11,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RelatorioEmprestimoService {
 
-    private final EmprestimoRepository EMPRESTIMO_REPOSITORY;
+    private final EmprestimoRepository emprestimoRepository;
 
+    // gera metricas consolidadas executando queries de contagem direta no banco
     @Transactional(readOnly = true)
-    public RelatorioEmprestimoResponse gerarRelatorioEmprestimo(){
-
-        long totalEmprestimo = EMPRESTIMO_REPOSITORY.count();
-        long emprestimosAtivos = EMPRESTIMO_REPOSITORY
-                .findByStatusEmprestimo(StatusEmprestimo.ATIVO).size();
-        long emprestimosConcluidos = EMPRESTIMO_REPOSITORY
-                .findByStatusEmprestimo(StatusEmprestimo.CONCLUIDO).size();
-        long emprestimosAtrasados = EMPRESTIMO_REPOSITORY
-                .findByStatusEmprestimo(StatusEmprestimo.ATRASADO).size();
+    public RelatorioEmprestimoResponse gerarRelatorioEmprestimo() {
+        // executa count no banco de dados para evitar carregar entidades na memoria
+        long totalEmprestimo = emprestimoRepository.count();
+        long emprestimosAtivos = emprestimoRepository.countByStatusEmprestimo(StatusEmprestimo.ATIVO);
+        long emprestimosConcluidos = emprestimoRepository.countByStatusEmprestimo(StatusEmprestimo.CONCLUIDO);
+        long emprestimosAtrasados = emprestimoRepository.countByStatusEmprestimo(StatusEmprestimo.ATRASADO);
 
         return new RelatorioEmprestimoResponse(
                 totalEmprestimo,
                 emprestimosAtivos,
                 emprestimosConcluidos,
-                emprestimosAtrasados);
+                emprestimosAtrasados
+        );
     }
 }
