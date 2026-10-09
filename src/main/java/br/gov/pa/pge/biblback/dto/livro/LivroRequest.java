@@ -1,4 +1,5 @@
-package br.gov.pa.pge.biblback.dto;
+
+package br.gov.pa.pge.biblback.dto.livro;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

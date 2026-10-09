@@ -1,5 +1,7 @@
-package br.gov.pa.pge.biblback.dto;
+package br.gov.pa.pge.biblback.dto.emprestimo;
 
+import br.gov.pa.pge.biblback.dto.livro.LivroResponse;
+import br.gov.pa.pge.biblback.dto.usuario.UsuarioResponse;
 import br.gov.pa.pge.biblback.enums.StatusEmprestimo;
 import br.gov.pa.pge.biblback.model.Emprestimo;
 

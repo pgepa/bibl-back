@@ -1,4 +1,4 @@
-package br.gov.pa.pge.biblback.dto;
+package br.gov.pa.pge.biblback.dto.usuario;
 
 import br.gov.pa.pge.biblback.enums.StatusUsuario;
 import br.gov.pa.pge.biblback.enums.TipoUsuario;

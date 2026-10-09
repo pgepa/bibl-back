@@ -1,4 +1,4 @@
-package br.gov.pa.pge.biblback.dto;
+package br.gov.pa.pge.biblback.dto.erro;
 
 import java.time.Instant;
 

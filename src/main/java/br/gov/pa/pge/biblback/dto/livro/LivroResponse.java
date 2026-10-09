@@ -1,4 +1,4 @@
-package br.gov.pa.pge.biblback.dto;
+package br.gov.pa.pge.biblback.dto.livro;
 
 import br.gov.pa.pge.biblback.model.Livro;
 
